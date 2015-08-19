@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+
+    <head>
+
+        <title>Форма регистрации</title>
+
+        <script src="../Libraries/angular.js"></script>
+        <link href="../Libraries/bootstrap-theme.css" rel="stylesheet" />
+        <link href="../Libraries/bootstrap.css" rel="stylesheet" />
+        <script src="../Libraries/jquery-1.11.3.min.js"></script>
+        <script src="../Libraries/mask.js"></script>
+
+        <script>
+            angular.module("sampleApp", [])
+                .controller("defaultCtrl", function ($scope) {
+                $scope.addNewUser = function (userDetails) {
+                    if (isvalid) {
+                        $scope.message = userDetails.name + " " + userDetails.email + "" + userDetails.phone;
+                    } else {
+                        $scope.message = "Error";
+                        $scope.showError = true;
+                    }
+                }
+                $scope.message = "Ready";
+                $scope.getError = function (error) {
+                    if (angular.isDefined(error)) {
+                        if (error.required) {
+                            return "Поле не должно быть пустым";
+                        } else if (error.email) {
+                            return "Введите праивльный email";
+                        }
+                    }
+                }
+            });
+        </script>
+        <script type="text/javascript">
+            jQuery(function ($) {
+                $("#phone").mask("+7 (999) 999-99-99");
+            });
+        </script>
+
+        <style>
+            form .ng-invalid-required.ng-dirty {
+                background-color: lightpink;
+            }
+
+            form .ng-invalid-email.ng-dirty {
+                background-color: lightgoldenrodyellow;
+            }
+
+            form .ng-valid.ng-dirty {
+                background-color: lightgreen;
+            }
+
+            span.summary.ng-invalid {
+                color: red;
+                font-weight: bold;
+            }
+
+            span.summary.ng-valid {
+                color: green;
+            }
+
+            div.error {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="panel" style="width:300px" ng-controller="defaultCtrl">
+            <form name="myForm" novalidate ng-submit="addNewUser(newUser)">
+                <div class="well">
+                    <div class="form-group">
+                        <label>Имя:</label>
+                        <input name="userName" type="text" class="form-control" required ng-model="newUser.name">
+                    </div>
+                    <div class="form-group">
+                        <label>Почта:</label>
+                        <input name="userEmail" type="email" class="form-control" required ng-model="newUser.email">
+                        <div class="error" ng-show="myForm.userEmail.$invalid && myForm.userEmail.$dirty">
+                            {{getError(myForm.userEmail.$error)}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Телефон:</label>
+                        <input id="phone" name="userPhone" type="text" class="form-control" ng-model="newUser.phone">
+                        <div class="error" ng-show="myForm.userPhone.$invalid && myForm.userPhone.$dirty">
+                            {{getError(myForm.userPhone.$error)}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль:</label>
+                        <input name="userPassword" type="password" class="form-control" ng-model="newUser.pass" required>
+                        <div class="error" ng-show="myForm.userPassword.$invalid && myForm.userPassword.$dirty">
+                            {{getError(myForm.userPassword.$error)}}
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input name="agreed" type="checkbox" ng-model="newUser.agreed" required> Согласен с условиями использования
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" ng-disabled="myForm.$invalid">
+                        Зарегистрироваться
+                    </button>
+                </div>
+                <div class="well">
+                    Message: {{message}}
+                    <div>
+                        Valid:
+                        <span class="summary" ng-class="myForm.$valid ? 'ng-valid' : 'ng-invalid'">
+                            {{myForm.$valid}}
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
